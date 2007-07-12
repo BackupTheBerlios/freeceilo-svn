@@ -1,0 +1,77 @@
+#!/usr/bin/python
+#################################################################################
+#    Description:FreeCeilo project.						#
+#    Copyright (C) 2007  George John.All rights reserved.			#
+#    Supported by SPACE www.space-kerala.org		 			#
+#    Author Vimal Joseph <vimal@space-kerala.org>	      	   		#
+#################################################################################
+#    This program is free software: you can redistribute it and/or modify	#
+#    it under the terms of the GNU General Public License as published by	#
+#    the Free Software Foundation, either version 3 of the License, or		#
+#    (at your option) any later version.					#
+#										#	
+#    This program is distributed in the hope that it will be useful,		#
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of		#
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the		#
+#    GNU General Public License for more details.				#
+#										#
+#    You should have received a copy of the GNU General Public License		#
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.	#
+#################################################################################
+
+import serial
+import time,os
+from user import home
+try:
+  print "Checking the serial port ttys0"
+  ser = serial.Serial('/dev/ttyS0', 19200, timeout=1)
+  print "Success"
+except:
+  try:
+	print "Failed to open the serial port ttys0"
+	print "Checking the serial port ttys1"
+	ser = serial.Serial('/dev/ttyS1', 19200, timeout=1)
+	print "Success"
+  except:
+    try:
+	print "Failed to open the serial port ttys1"
+	print "Checking the serial port ttys2"
+	ser = serial.Serial('/dev/ttyS2', 19200, timeout=1)
+	print "Success"
+    except:
+	print "Failed to open the serial port ttys2"
+	raise sys.exit()
+ser.flushInput()
+flag=1
+
+####------Create Folder for storing the data from ceilometer ----------------######
+if os.path.isdir("%s/"%home+"FreeCeilo") is False:
+	os.mkdir("%s/"%home+"FreeCeilo")
+if os.path.isdir("%s/FreeCeilo/"%home+"data") is False:
+	os.mkdir("%s/FreeCeilo/"%home+"data")
+####------Create Folder for storing the data from ceilometer ----------------######
+
+fname= time.strftime("%Y-%m-%d",time.localtime(time.time()))+".dat"
+f = file("%s/FreeCeilo/data/"%home+fname,'a')
+while True:
+	try:
+		x=ser.readline()
+		fname1=time.strftime("%Y-%m-%d",time.localtime(time.time()))+".dat"
+		if fname != fname1:
+			fname=fname1
+			f.close()
+			f = open("%s/FreeCeilo/data/"%home+fname,'a')
+		
+		while x != "":
+		
+			if flag==1:
+				f.write(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))+"\n")
+				flag=0
+			f.write(x)
+			x=ser.readline()
+		
+		flag=1
+	except (KeyboardInterrupt, SystemExit):
+		f.close()
+		raise
+	

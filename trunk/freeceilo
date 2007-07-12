@@ -1,0 +1,40 @@
+#!/usr/bin/python
+#################################################################################
+#    Description:FreeCeilo project.						#
+#    Copyright (C) 2007  George John.All rights reserved.			#
+#    Supported by SPACE www.space-kerala.org		 			#
+#    george@space-kerala.org ,georgejohn@users.berlios.de      	   		#
+#################################################################################
+#    This program is free software: you can redistribute it and/or modify	#
+#    it under the terms of the GNU General Public License as published by	#
+#    the Free Software Foundation, either version 3 of the License, or		#
+#    (at your option) any later version.					#
+#										#	
+#    This program is distributed in the hope that it will be useful,		#
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of		#
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the		#
+#    GNU General Public License for more details.				#
+#										#
+#    You should have received a copy of the GNU General Public License		#
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.	#
+#################################################################################
+import sys, os, os.path, compiler, getopt
+import freeceilo.Gui.gui
+from user import home
+import gtk 
+
+guilib=freeceilo.Gui.gui
+
+def main():
+    gtk.main()
+    return 0
+x=os.uname()
+if __name__=="__main__":
+	if os.path.isdir("/tmp/FreeCeilo") is False:
+		os.mkdir("/tmp/FreeCeilo")
+	if os.path.isdir("%s/"%home+"FreeCeilo") is False:
+		os.mkdir("%s/"%home+"FreeCeilo")
+	if os.path.isdir("%s/FreeCeilo/"%home+"log") is False:
+		os.mkdir("%s/FreeCeilo/"%home+"log")
+	app=guilib.GuiApp()
+	main()
